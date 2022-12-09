@@ -1,0 +1,42 @@
+// Import the required libraries
+#include <PID_v1.h>
+
+// Set the pins for the infrared sensors
+const int frontSensorPin = A0;
+const int bottomSensorPin = A1;
+
+// Set the pins for the motors
+const int leftMotorPin = 2;
+const int rightMotorPin = 3;
+
+// Set the PID constants
+const double Kp = 1.0;
+const double Ki = 0.1;
+const double Kd = 0.1;
+
+// Create the PID controller
+PID pid(&frontSensorPin, &bottomSensorPin, &leftMotorPin, &rightMotorPin, Kp, Ki, Kd);
+
+void setup()
+{
+  // Set the initial direction and speed of the motors
+  leftMotorPin = 100;
+  rightMotorPin = 100;
+
+  // Initialize the PID controller
+  pid.SetOutputLimits(-255, 255);
+  pid.SetMode(AUTOMATIC);
+}
+
+void loop()
+{
+  // Continuously read the values from the sensors
+  pid.Compute();
+
+  // Update the direction and speed of the motors
+  leftMotorPin = pid.GetOutput(&frontSensorPin);
+  rightMotorPin = pid.GetOutput(&bottomSensorPin);
+
+  // Delay for a short time
+  delay(10);
+}
