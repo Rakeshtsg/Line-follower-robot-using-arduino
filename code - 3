@@ -1,0 +1,72 @@
+// constants for the four sensors
+const int leftSensorPin = 2;
+const int rightSensorPin = 3;
+const int frontLeftSensorPin = 4;
+const int frontRightSensorPin = 5;
+
+// constants for the motor driver
+const int motor1Pin1 = 6;
+const int motor1Pin2 = 7;
+const int motor2Pin1 = 8;
+const int motor2Pin2 = 9;
+
+// variables to store the sensor readings
+int leftSensorValue;
+int rightSensorValue;
+int frontLeftSensorValue;
+int frontRightSensorValue;
+
+void setup() {
+  // set the sensor pins as inputs
+  pinMode(leftSensorPin, INPUT);
+  pinMode(rightSensorPin, INPUT);
+  pinMode(frontLeftSensorPin, INPUT);
+  pinMode(frontRightSensorPin, INPUT);
+
+  // set the motor driver pins as outputs
+  pinMode(motor1Pin1, OUTPUT);
+  pinMode(motor1Pin2, OUTPUT);
+  pinMode(motor2Pin1, OUTPUT);
+  pinMode(motor2Pin2, OUTPUT);
+}
+
+void loop() {
+  // read the sensor values
+  leftSensorValue = digitalRead(leftSensorPin);
+  rightSensorValue = digitalRead(rightSensorPin);
+  frontLeftSensorValue = digitalRead(frontLeftSensorPin);
+  frontRightSensorValue = digitalRead(frontRightSensorPin);
+
+  // implement the control algorithm to determine the appropriate action
+  if (leftSensorValue == HIGH && rightSensorValue == HIGH) {
+    // both left and right sensors detect the line, move forward
+    digitalWrite(motor1Pin1, HIGH);
+    digitalWrite(motor1Pin2, LOW);
+    digitalWrite(motor2Pin1, HIGH);
+    digitalWrite(motor2Pin2, LOW);
+  }
+  else if (frontLeftSensorValue == HIGH && frontRightSensorValue == HIGH) {
+    // both front sensors detect the line, turn in the direction of the sensors
+    if (frontLeftSensorValue > frontRightSensorValue) {
+      // turn left
+      digitalWrite(motor1Pin1, LOW);
+      digitalWrite(motor1Pin2, LOW);
+      digitalWrite(motor2Pin1, HIGH);
+      digitalWrite(motor2Pin2, LOW);
+    }
+    else {
+      // turn right
+      digitalWrite(motor1Pin1, HIGH);
+      digitalWrite(motor1Pin2, LOW);
+      digitalWrite(motor2Pin1, LOW);
+      digitalWrite(motor2Pin2, LOW);
+    }
+  }
+  else {
+    // stop the motors
+    digitalWrite(motor1Pin1, LOW);
+    digitalWrite(motor1Pin2, LOW);
+    digitalWrite(motor2Pin1, LOW);
+    digitalWrite(motor2Pin2, LOW);
+  }
+}
