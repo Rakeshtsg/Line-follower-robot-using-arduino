@@ -1,0 +1,52 @@
+// constants for the four sensors
+const int leftSensorPin = 2;
+const int rightSensorPin = 3;
+const int frontLeftSensorPin = 4;
+const int frontRightSensorPin = 5;
+
+// variables to store the sensor readings
+int leftSensorValue;
+int rightSensorValue;
+int frontLeftSensorValue;
+int frontRightSensorValue;
+
+void setup() {
+  // set the sensor pins as inputs
+  pinMode(leftSensorPin, INPUT);
+  pinMode(rightSensorPin, INPUT);
+  pinMode(frontLeftSensorPin, INPUT);
+  pinMode(frontRightSensorPin, INPUT);
+}
+
+void loop() {
+  // read the sensor values
+  leftSensorValue = digitalRead(leftSensorPin);
+  rightSensorValue = digitalRead(rightSensorPin);
+  frontLeftSensorValue = digitalRead(frontLeftSensorPin);
+  frontRightSensorValue = digitalRead(frontRightSensorPin);
+
+  // implement the control algorithm to determine the appropriate action
+  if (leftSensorValue == HIGH && rightSensorValue == HIGH) {
+    // both left and right sensors detect the line, move forward
+    analogWrite(motor1Pin, 255);
+    analogWrite(motor2Pin, 255);
+  }
+  else if (frontLeftSensorValue == HIGH && frontRightSensorValue == HIGH) {
+    // both front sensors detect the line, turn in the direction of the sensors
+    if (frontLeftSensorValue > frontRightSensorValue) {
+      // turn left
+      analogWrite(motor1Pin, 0);
+      analogWrite(motor2Pin, 255);
+    }
+    else {
+      // turn right
+      analogWrite(motor1Pin, 255);
+      analogWrite(motor2Pin, 0);
+    }
+  }
+  else {
+    // stop the motors
+    analogWrite(motor1Pin, 0);
+    analogWrite(motor2Pin, 0);
+  }
+}
